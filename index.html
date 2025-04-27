@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxograma Hexagonal Interativo</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+</head>
+<body>
+    <div class="controls">
+        <button id="add-hex"><i class="fas fa-plus"></i> Adicionar Hexágono</button>
+        <button id="save-flow"><i class="fas fa-save"></i> Salvar Fluxograma</button>
+        <button id="load-flow"><i class="fas fa-upload"></i> Carregar Fluxograma</button>
+        <input type="color" id="hex-color" value="#4CAF50">
+        <select id="icon-select">
+            <option value="fa-chart-bar">Gráfico</option>
+            <option value="fa-user">Usuário</option>
+            <option value="fa-cog">Configuração</option>
+            <option value="fa-dollar-sign">Finanças</option>
+            <option value="fa-database">Dados</option>
+            <option value="fa-comment">Comentário</option>
+            <option value="fa-flag">Bandeira</option>
+            <option value="fa-star">Estrela</option>
+        </select>
+    </div>
+    
+    <div id="flowchart-container">
+        <div id="central-hex" class="hexagon" draggable="true" data-id="central" data-progress="100">
+            <div class="hex-content">
+                <h3 contenteditable="true">INFOGRAPHIC OPTIONS</h3>
+                <div class="color-dots">
+                    <span class="dot" style="background-color: #FF5252;"></span>
+                    <span class="dot" style="background-color: #FFA726;"></span>
+                    <span class="dot" style="background-color: #FFEB3B;"></span>
+                    <span class="dot" style="background-color: #66BB6A;"></span>
+                    <span class="dot" style="background-color: #42A5F5;"></span>
+                    <span class="dot" style="background-color: #7E57C2;"></span>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-bar" style="width: 100%"></div>
+                    <span class="progress-text">100%</span>
+                </div>
+            </div>
+            <!-- Botões de controle do hexágono (inicialmente ocultos) -->
+            <div class="hex-controls">
+                <button class="edit-btn" title="Editar"><i class="fas fa-edit"></i></button>
+                <button class="color-btn" title="Mudar Cor"><i class="fas fa-palette"></i></button>
+                <button class="progress-btn" title="Definir Progresso"><i class="fas fa-tasks"></i></button>
+                <button class="delete-btn" title="Excluir"><i class="fas fa-trash"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <div id="context-menu">
+        <ul>
+            <li id="edit-text">Editar Texto</li>
+            <li id="change-color">Mudar Cor</li>
+            <li id="change-icon">Mudar Ícone</li>
+            <li id="set-progress">Definir Progresso</li>
+            <li id="delete-hex">Excluir</li>
+        </ul>
+    </div>
+
+    <!-- Modal para seleção de cor -->
+    <div id="color-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3>Escolha uma cor</h3>
+            <div class="color-palette">
+                <div class="color-option" style="background-color: #FF5252;" data-color="#FF5252"></div>
+                <div class="color-option" style="background-color: #FFA726;" data-color="#FFA726"></div>
+                <div class="color-option" style="background-color: #FFEB3B;" data-color="#FFEB3B"></div>
+                <div class="color-option" style="background-color: #66BB6A;" data-color="#66BB6A"></div>
+                <div class="color-option" style="background-color: #42A5F5;" data-color="#42A5F5"></div>
+                <div class="color-option" style="background-color: #7E57C2;" data-color="#7E57C2"></div>
+                <div class="color-option" style="background-color: #26C6DA;" data-color="#26C6DA"></div>
+                <div class="color-option" style="background-color: #EC407A;" data-color="#EC407A"></div>
+            </div>
+            <div class="custom-color">
+                <input type="color" id="custom-color-picker" value="#4CAF50">
+                <button id="apply-custom-color">Aplicar Cor Personalizada</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para seleção de ícone -->
+    <div id="icon-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3>Escolha um ícone</h3>
+            <div class="icon-grid">
+                <div class="icon-option" data-icon="fa-chart-bar"><i class="fas fa-chart-bar"></i></div>
+                <div class="icon-option" data-icon="fa-user"><i class="fas fa-user"></i></div>
+                <div class="icon-option" data-icon="fa-cog"><i class="fas fa-cog"></i></div>
+                <div class="icon-option" data-icon="fa-dollar-sign"><i class="fas fa-dollar-sign"></i></div>
+                <div class="icon-option" data-icon="fa-database"><i class="fas fa-database"></i></div>
+                <div class="icon-option" data-icon="fa-comment"><i class="fas fa-comment"></i></div>
+                <div class="icon-option" data-icon="fa-flag"><i class="fas fa-flag"></i></div>
+                <div class="icon-option" data-icon="fa-star"><i class="fas fa-star"></i></div>
+                <div class="icon-option" data-icon="fa-bell"><i class="fas fa-bell"></i></div>
+                <div class="icon-option" data-icon="fa-calendar"><i class="fas fa-calendar"></i></div>
+                <div class="icon-option" data-icon="fa-envelope"><i class="fas fa-envelope"></i></div>
+                <div class="icon-option" data-icon="fa-heart"><i class="fas fa-heart"></i></div>
+                <div class="icon-option" data-icon="fa-camera"><i class="fas fa-camera"></i></div>
+                <div class="icon-option" data-icon="fa-file"><i class="fas fa-file"></i></div>
+                <div class="icon-option" data-icon="fa-chart-pie"><i class="fas fa-chart-pie"></i></div>
+                <div class="icon-option" data-icon="fa-users"><i class="fas fa-users"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para definir progresso -->
+    <div id="progress-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3>Definir Progresso</h3>
+            <div class="progress-control">
+                <input type="range" id="progress-slider" min="0" max="100" value="0" class="slider">
+                <div class="progress-preview">
+                    <div class="progress-bar-preview"></div>
+                    <span id="progress-value">0%</span>
+                </div>
+            </div>
+            <button id="apply-progress">Aplicar</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

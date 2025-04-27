@@ -1,0 +1,391 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #121212;
+    color: white;
+    overflow: hidden;
+    padding: 20px;
+}
+
+.controls {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 100;
+    display: flex;
+    gap: 10px;
+    background-color: #1e1e1e;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+button {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #444;
+}
+
+#flowchart-container {
+    position: relative;
+    width: 100%;
+    height: calc(100vh - 80px);
+    margin-top: 60px;
+}
+
+.hexagon {
+    position: absolute;
+    width: 180px;
+    height: 160px;
+    background-color: #4CAF50;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: move;
+    user-select: none;
+    transition: transform 0.3s;
+}
+
+.hexagon:hover {
+    transform: scale(1.05);
+}
+
+.hexagon:hover .hex-controls {
+    opacity: 1;
+}
+
+#central-hex {
+    left: calc(50% - 90px);
+    top: calc(50% - 80px);
+    background-color: #333;
+}
+
+.hex-content {
+    text-align: center;
+    color: white;
+    padding: 10px;
+    width: 90%;
+}
+
+.hex-content h3 {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.hex-content p {
+    font-size: 12px;
+}
+
+.hex-content i {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+/* Barra de progresso nos hexágonos */
+.progress-container {
+    background-color: rgba(0, 0, 0, 0.3);
+    height: 8px;
+    border-radius: 4px;
+    margin-top: 10px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: #FFFFFF;
+    border-radius: 4px;
+    transition: width 0.3s ease-in-out;
+}
+
+.progress-text {
+    font-size: 11px;
+    color: white;
+    margin-top: 2px;
+    display: block;
+    text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
+.hex-controls {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    display: flex;
+    gap: 5px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 10;
+}
+
+.hex-controls button {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.edit-btn {
+    background-color: #42A5F5;
+}
+
+.color-btn {
+    background-color: #FFA726;
+}
+
+.progress-btn {
+    background-color: #66BB6A;
+}
+
+.delete-btn {
+    background-color: #EF5350;
+}
+
+/* Não mostrar o botão de exclusão no hexágono central */
+#central-hex .delete-btn {
+    display: none;
+}
+
+.color-dots {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.connection {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.3);
+    z-index: -1;
+    transform-origin: 0 0;
+    pointer-events: none;
+}
+
+#context-menu {
+    position: fixed;
+    z-index: 1000;
+    width: 150px;
+    background-color: #1e1e1e;
+    border-radius: 5px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    display: none;
+}
+
+#context-menu ul {
+    list-style-type: none;
+}
+
+#context-menu ul li {
+    padding: 8px 10px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#context-menu ul li:hover {
+    background-color: #333;
+}
+
+[contenteditable="true"]:focus {
+    outline: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 4px;
+}
+
+#hex-color, #icon-select {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 8px;
+    border-radius: 4px;
+}
+
+/* Modais */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.modal-content {
+    background-color: #1e1e1e;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    max-width: 90%;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    position: relative;
+}
+
+.close-modal {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-modal:hover {
+    color: #fff;
+}
+
+/* Seletor de cores */
+.color-palette {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.color-option {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s;
+    border: 2px solid transparent;
+}
+
+.color-option:hover {
+    transform: scale(1.1);
+    border-color: white;
+}
+
+.custom-color {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+#custom-color-picker {
+    width: 40px;
+    height: 40px;
+    border: none;
+    cursor: pointer;
+}
+
+/* Seletor de ícones */
+.icon-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.icon-option {
+    width: 50px;
+    height: 50px;
+    background-color: #333;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.icon-option:hover {
+    background-color: #444;
+}
+
+.icon-option i {
+    font-size: 24px;
+}
+
+/* Controle de progresso */
+.progress-control {
+    margin: 20px 0;
+}
+
+.slider {
+    width: 100%;
+    height: 10px;
+    border-radius: 5px;
+    background: #333;
+    outline: none;
+    -webkit-appearance: none;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #66BB6A;
+    cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #66BB6A;
+    cursor: pointer;
+}
+
+.progress-preview {
+    margin-top: 15px;
+    background-color: rgba(0, 0, 0, 0.3);
+    height: 15px;
+    border-radius: 7px;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-bar-preview {
+    height: 100%;
+    background-color: #66BB6A;
+    width: 0%;
+    transition: width 0.3s;
+}
+
+#progress-value {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    text-shadow: 0 0 2px rgba(0, 0, 0, 0.8);
+}
+
+#apply-progress {
+    margin-top: 10px;
+    width: 100%;
+    background-color: #66BB6A;
+}
+
+#apply-progress:hover {
+    background-color: #4CAF50;
+}
